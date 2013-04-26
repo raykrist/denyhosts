@@ -1,0 +1,87 @@
+### THIS FILE IS MANAGED BY PUPPET. ANY MANUAL CHANGES WILL GET OVERWRITTEN.
+
+############ THESE SETTINGS ARE REQUIRED ############
+
+#######################################################################
+#
+# THESE SETTINGS DIFFER DEPENDING ON THE OPERATING SYSTEM
+#
+
+SECURE_LOG = <%= scope.lookupvar('denyhosts::params::secure_log') %>
+LOCK_FILE = <%= scope.lookupvar('denyhosts::params::pidfile') %>
+
+HOSTS_DENY = /etc/hosts.deny
+
+#######################################################################
+#
+# THESE SETTINGS ARE CONFIGURABLE VIA PUPPET ON A NODE-BY-NODE BASIS
+#
+#
+### Mandatory settings
+
+# Number of authentication attempts allowed using invalid/valid/root/restricted 
+# accounts before blocking.
+DENY_THRESHOLD_VALID = <%= deny_threshold_valid %>
+DENY_THRESHOLD_INVALID = <%= deny_threshold_invalid %>
+DENY_THRESHOLD_RESTRICTED = <%= deny_threshold_restricted %>
+DENY_THRESHOLD_ROOT = <%= deny_threshold_root %>
+
+#######################################################################
+#
+# THESE SETTINGS ARE USUALLY STATIC
+#
+### Mandatory settings
+
+# Purge hosts from hosts.deny this many times, before blocking them for good. If 
+# undefined, never purge any hosts from hosts.deny.
+PURGE_DENY = 
+PURGE_THRESHOLD = 0
+
+# Reset login failure count after this time for valid/invalid/root/restricted 
+# users
+AGE_RESET_VALID=5d
+AGE_RESET_INVALID=10d
+AGE_RESET_ROOT=25d
+AGE_RESET_RESTRICTED=25d
+RESET_ON_SUCCESS=YES
+
+# Block all services, not just sshd
+BLOCK_SERVICE = ALL
+# The directory denyhosts writes it's data to
+WORK_DIR = /var/lib/denyhosts
+# Detect and report suspicious login attempts from allowed-hosts
+SUSPICIOUS_LOGIN_REPORT_ALLOWED_HOSTS=YES
+# Lookup and report hostnames in addition to offending IP addresses
+HOSTNAME_LOOKUP=YES
+
+# Daemon logfile
+DAEMON_LOG = /var/log/denyhosts
+# Jan 1 13:05:59   
+DAEMON_LOG_TIME_FORMAT = %b %d %H:%M:%S
+# This is the default:
+DAEMON_LOG_MESSAGE_FORMAT = %(asctime)s - %(name)-12s: %(levelname)-8s %(message)s
+# Log polling interval
+DAEMON_SLEEP = 30s
+# Purge expired entries from hosts.deny this often
+DAEMON_PURGE = 1h
+
+### Optional settings
+
+ADMIN_EMAIL = <%= email %>
+SMTP_HOST = localhost
+SMTP_PORT = 25
+#SMTP_USERNAME=foo
+#SMTP_PASSWORD=bar
+SMTP_FROM = Denyhosts daemon <root@<%= fqdn %>>
+SMTP_SUBJECT = DenyHosts report
+# See "man strftime" for syntax
+SMTP_DATE_FORMAT = %a, %d %b %Y %H:%M:%S %z
+SYSLOG_REPORT=NO
+ALLOWED_HOSTS_HOSTNAME_LOOKUP=YES
+
+# Run a command after a host is added/purged to/from hosts.deny
+#PLUGIN_DENY=/usr/bin/true
+#PLUGIN_PURGE=/usr/bin/true
+
+# See http://denyhosts.sf.net/faq.html#userdef_regex for details
+#USERDEF_FAILED_ENTRY_REGEX=
