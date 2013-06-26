@@ -22,12 +22,16 @@
 #   Email address where deny reports are sent to. Defaults to global variable
 #   $::servermonitor. Use an empty string to disable email reports, which can be
 #   numerous.
+# [*monitor_email*]
+#   Email address where local service monitoring software sends it's reports to. 
+#   Defaults to global variable $::servermonitor.
 #
 # == Examples
 #
 # class { 'denyhosts':
 #   allowed_hosts => ['localhost', 'mycomputer.domain.com'],
 #   email => '',
+#   monitor_email => 'monit@domain.com',
 # }
 #
 # == Authors
@@ -45,7 +49,8 @@ class denyhosts(
     $deny_threshold_restricted = 5,
     $deny_threshold_root = 3,
     $allowed_hosts = ['localhost'],
-    $email = $servermonitor
+    $email = $::servermonitor,
+    $monitor_email = $::servermonitor
     )
 {
     include denyhosts::install
@@ -60,5 +65,10 @@ class denyhosts(
     }
 
     include denyhosts::service
-    include denyhosts::monit
+
+    if tagged('monit') {
+        class { 'denyhosts::monit':
+            monitor_email => $monitor_email,
+        }
+    }
 }

@@ -3,7 +3,10 @@
 #
 # Setups monit rules for denyhosts
 #
-class denyhosts::monit {
+class denyhosts::monit(
+    $monitor_email
+)
+{
 
     include denyhosts::params
 

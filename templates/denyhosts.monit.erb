@@ -3,3 +3,5 @@
 check process denyhosts with pidfile <%= scope.lookupvar('denyhosts::params::pidfile') %>
    start program = "/etc/init.d/denyhosts start"
    stop  program = "/etc/init.d/denyhosts stop"
+   alert <%= scope.lookupvar('denyhosts::monit::monitor_email') %> with reminder on 480 cycles
+
