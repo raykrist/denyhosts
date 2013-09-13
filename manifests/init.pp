@@ -53,6 +53,10 @@ class denyhosts(
     $monitor_email = $::servermonitor
     )
 {
+
+# Rationale for this is explained in init.pp of the sshd module
+if hiera('manage_denyhosts') != 'false' {
+
     include denyhosts::install
 
     class { 'denyhosts::config':
@@ -71,4 +75,5 @@ class denyhosts(
             monitor_email => $monitor_email,
         }
     }
+}
 }
