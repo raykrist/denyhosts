@@ -55,7 +55,7 @@ class denyhosts(
 {
 
 # Rationale for this is explained in init.pp of the sshd module
-if hiera('manage_denyhosts') != 'false' {
+if hiera('manage_denyhosts', 'true') != 'false' {
 
     include denyhosts::install
 
