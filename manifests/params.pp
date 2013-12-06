@@ -24,14 +24,29 @@ class denyhosts::params {
         'RedHat': {
             $pidfile = '/var/lock/subsys/denyhosts'
             $secure_log = '/var/log/secure'
+            $service_name = 'denyhosts'
+
+            if $::operatingsystem == 'Fedora' {
+                $service_start = "/usr/bin/systemctl start ${service_name}.service"
+                $service_stop = "/usr/bin/systemctl stop ${service_name}.service"
+            } else {
+                $service_start = "/sbin/service $service_name start"
+                $service_stop = "/sbin/service $service_name stop"
+            }
         }
         'Debian': {
             $pidfile = '/var/run/denyhosts.pid'
             $secure_log = '/var/log/auth.log'
+            $service_name = 'denyhosts'
+            $service_start = "/usr/sbin/service $service_name start"
+            $service_stop = "/usr/sbin/service $service_name stop"
         }
         default: {
             $pidfile = '/var/run/denyhosts.pid'
             $secure_log = '/var/log/auth.log'
+            $service_name = 'denyhosts'
+            $service_start = "/usr/sbin/service $service_name start"
+            $service_stop = "/usr/sbin/service $service_name stop"
         }
     }
 }
