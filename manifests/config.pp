@@ -13,6 +13,7 @@ class denyhosts::config(
 )
 {
 
+    include os::params
     include denyhosts::params
 
     file { 'denyhosts-denyhosts.conf':
@@ -20,7 +21,7 @@ class denyhosts::config(
         name => '/etc/denyhosts.conf',
         content => template('denyhosts/denyhosts.conf.erb'),
         owner => root,
-        group => root,
+        group => "${::os::params::admingroup}",
         mode => 755,
         notify => Class['denyhosts::service'],
     }
@@ -30,7 +31,7 @@ class denyhosts::config(
         name => '/etc/hosts.allow',
         content => template('denyhosts/hosts.allow.erb'),
         owner => root,
-        group => root,
+        group => "${::os::params::admingroup}",
         mode => 755,
         notify => Class['denyhosts::service'],
     }
