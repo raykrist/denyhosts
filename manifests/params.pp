@@ -3,23 +3,16 @@
 #
 # Defines some variables based on the operating system
 #
-class denyhosts::params {
-
-   # On some platforms the init script does not have a "status" target,
-   # which means config change does not trigger a service restart without
-   # "hastatus => false"
-   case $::lsbdistcodename {
-        'squeeze': {
-            $service_hasstatus = 'false'
-        }
-        'lucid': {
-            $service_hasstatus = 'false'
-        }
-        default: {
-            $service_hasstatus = 'true'
-        }
-    }
-
+class denyhosts::params(
+  # On some platforms the init script does not have a "status" target,
+  # which means config change does not trigger a service restart without
+  # "hastatus => false"
+  $service_hasstatus = $::lsbdistcodename? {
+    'squeeze' => false,
+    'lucid' => false,
+    default => true
+  }
+) {
     case $::osfamily {
         'RedHat': {
             $pidfile = '/var/lock/subsys/denyhosts'

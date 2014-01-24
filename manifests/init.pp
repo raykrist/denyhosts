@@ -49,31 +49,14 @@ class denyhosts(
     $deny_threshold_restricted = 5,
     $deny_threshold_root = 3,
     $allowed_hosts = ['localhost'],
-    $email = $::servermonitor,
-    $monitor_email = $::servermonitor
+    $email = '',
+    $monitor_email = ''
     )
 {
 
-# Rationale for this is explained in init.pp of the sshd module
-if hiera('manage_denyhosts', 'true') != 'false' {
+  class { 'denyhosts::install': } ->
+  class { 'denyhosts::params': } ->
+  class { 'denyhosts::config': } ->
+  class { 'denyhosts::service': }
 
-    include denyhosts::install
-
-    class { 'denyhosts::config':
-        deny_threshold_valid => $deny_threshold_valid,
-        deny_threshold_invalid => $deny_threshold_invalid,
-        deny_threshold_restricted => $deny_threshold_restricted,
-        deny_threshold_root => $deny_threshold_root,
-        allowed_hosts => $allowed_hosts,
-        email => $email,
-    }
-
-    include denyhosts::service
-
-    if tagged('monit') {
-        class { 'denyhosts::monit':
-            monitor_email => $monitor_email,
-        }
-    }
-}
 }

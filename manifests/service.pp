@@ -3,14 +3,14 @@
 #
 # Configures denyhosts to start on boot
 #
-class denyhosts::service {
+class denyhosts::service (
+  $service_hasstatus = $denyhosts::params::service_hasstatus
+){
 
-    include denyhosts::params
-
-    service { 'denyhosts':
-        enable => true,
-        name => 'denyhosts',
-        hasstatus => $service_hasstatus,
-        require => Class['denyhosts::config'],
-    }
+  service { 'denyhosts':
+    enable => true,
+    name => 'denyhosts',
+    hasstatus => $service_hasstatus,
+    require => Class['denyhosts::config'],
+  }
 }
