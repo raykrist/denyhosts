@@ -9,6 +9,7 @@ class denyhosts::service (
 
   service { 'denyhosts':
     enable => true,
+    ensure => running,
     name => 'denyhosts',
     hasstatus => $service_hasstatus,
     require => Class['denyhosts::config'],
